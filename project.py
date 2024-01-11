@@ -1,12 +1,14 @@
-import customtkinter as ctk 
+from tkinter import messagebox
+import tkinter as tk
 import mysql.connector
+
 
 # MySQL database connection details
 db_config = {
-    'host': 'your_host',
-    'user': 'your_user',
-    'password': 'your_password',
-    'database': 'your_database',
+    'host': 'localhost',
+    'user': 'jai',
+    'password': 'jai@2301420045',
+    'database': 'user_Credentials',
 }
 
 def create_user_table():
@@ -53,20 +55,42 @@ def signup():
     else:
         messagebox.showwarning("Warning", "Please enter both username and password.")
 
+# Create the main window
+root = tk.Tk()
+root.title("Signup Form")
 
-ctk.set_appearance_mode("System")
+# Set the window size and position
+root.geometry("800x400")
 
-ctk.set_default_color_theme("dark-blue")
+# Create frames
+left_frame = tk.Frame(root, width=480)
+right_frame = tk.Frame(root, width=320)
 
-class App(ctk.CTk):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        
-        self.title("EMS App")  
-        self.geometry("800x800")  
+# Pack frames in 60:40 ratio
+left_frame.pack(side=tk.LEFT, fill=tk.Y)
+right_frame.pack(side=tk.RIGHT, fill=tk.Y)
 
+# Load and display an image on the left frame
+photo = tk.PhotoImage(file="./images.png")
+image_label = tk.Label(left_frame, image=photo)
+image_label.photo = photo
+image_label.pack(expand=True, fill=tk.BOTH)
 
-if __name__ == "__main__":
-    app = App()
-    # Runs the app
-    app.mainloop() 
+# Create and pack widgets for the signup form on the right frame
+create_user_table()
+
+tk.Label(right_frame, text="Signup Form", font=("Helvetica", 16)).grid(row=0, column=0, columnspan=2, pady=10)
+
+tk.Label(right_frame, text="Username:").grid(row=1, column=0, padx=10, pady=5, sticky=tk.W)
+username_entry = tk.Entry(right_frame)
+username_entry.grid(row=1, column=1, padx=10, pady=5)
+
+tk.Label(right_frame, text="Password:").grid(row=2, column=0, padx=10, pady=5, sticky=tk.W)
+password_entry = tk.Entry(right_frame, show="*")
+password_entry.grid(row=2, column=1, padx=10, pady=5)
+
+signup_button = tk.Button(right_frame, text="Signup", command=signup)
+signup_button.grid(row=3, column=0, columnspan=2, pady=10)
+
+# Run the Tkinter event loop
+root.mainloop()
