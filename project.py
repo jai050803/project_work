@@ -1,5 +1,6 @@
 from tkinter import messagebox
 import tkinter as tk
+import customtkinter as ctk
 import mysql.connector
 
 
@@ -19,8 +20,10 @@ def create_user_table():
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS users (
                 id INT AUTO_INCREMENT PRIMARY KEY,
+                fullname VARCHAR(50),
+                emailaddress varchar(50),
                 username VARCHAR(50) UNIQUE,
-                password VARCHAR(50)
+                password VARCHAR(50),
             )
         """)
         conn.commit()
@@ -30,7 +33,7 @@ def create_user_table():
         cursor.close()
         conn.close()
 
-def insert_user(username, password):
+def insert_user(name, username, password):
     # Function to insert a new user into the database
     try:
         conn = mysql.connector.connect(**db_config)
@@ -56,41 +59,25 @@ def signup():
         messagebox.showwarning("Warning", "Please enter both username and password.")
 
 # Create the main window
-root = tk.Tk()
-root.title("Signup Form")
+ctk.set_appearance_mode("System")        
+
 
 # Set the window size and position
-root.geometry("800x400")
+ctk.set_default_color_theme("green")    
 
-# Create frames
-left_frame = tk.Frame(root, width=480)
-right_frame = tk.Frame(root, width=320)
-
-# Pack frames in 60:40 ratio
-left_frame.pack(side=tk.LEFT, fill=tk.Y)
-right_frame.pack(side=tk.RIGHT, fill=tk.Y)
-
-# Load and display an image on the left frame
-photo = tk.PhotoImage(file="./images.png")
-image_label = tk.Label(left_frame, image=photo)
-image_label.photo = photo
-image_label.pack(expand=True, fill=tk.BOTH)
-
-# Create and pack widgets for the signup form on the right frame
-create_user_table()
-
-tk.Label(right_frame, text="Signup Form", font=("Helvetica", 16)).grid(row=0, column=0, columnspan=2, pady=10)
-
-tk.Label(right_frame, text="Username:").grid(row=1, column=0, padx=10, pady=5, sticky=tk.W)
-username_entry = tk.Entry(right_frame)
-username_entry.grid(row=1, column=1, padx=10, pady=5)
-
-tk.Label(right_frame, text="Password:").grid(row=2, column=0, padx=10, pady=5, sticky=tk.W)
-password_entry = tk.Entry(right_frame, show="*")
-password_entry.grid(row=2, column=1, padx=10, pady=5)
-
-signup_button = tk.Button(right_frame, text="Signup", command=signup)
-signup_button.grid(row=3, column=0, columnspan=2, pady=10)
-
-# Run the Tkinter event loop
-root.mainloop()
+# Create App class
+class App(ctk.CTk):
+# Layout of the GUI will be written in the init itself
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+# Sets the title of our window to "App"
+        self.title("EMS App")    
+        self.geometry("800x800")
+        
+        
+        
+        
+if __name__ == "__main__":
+    app = App()
+    # Runs the app
+    app.mainloop()  
