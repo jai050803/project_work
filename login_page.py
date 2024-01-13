@@ -20,7 +20,7 @@ left_frame = ttk.Frame(root, width=350, height=700)
 left_frame.grid(row=0, column=0)
 
 # Load and display an image on the left frame
-image_path = "your_image_path.jpg"  # Replace with the actual image path
+image_path = "./images.png"  # Replace with the actual image path
 img = Image.open(image_path)
 img = img.resize((350, 700), Image.ANTIALIAS)
 photo = ImageTk.PhotoImage(img)
