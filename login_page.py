@@ -22,7 +22,6 @@ left_frame.grid(row=0, column=0)
 # Load and display an image on the left frame
 image_path = "./images.png"  # Replace with the actual image path
 img = Image.open(image_path)
-img = img.resize((350, 700), Image.ANTIALIAS)
 photo = ImageTk.PhotoImage(img)
 
 image_label = ttk.Label(left_frame, image=photo)
