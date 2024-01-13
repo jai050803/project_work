@@ -2,7 +2,25 @@ from tkinter import messagebox
 import tkinter as tk
 import customtkinter as ctk
 import mysql.connector
+import customtkinter as ctk
 
+class frame(ctk.CTkFrame):
+    def __init__(self, *args, header_name="Login", **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        self.header_name = header_name
+        
+        self.header = ctk.CTkLabel(self, text=self.header_name)
+        self.header.grid(row=0, column=0, padx=10, pady=10)
+        
+        self.fullname = ctk.CTkLabel(self, text="Enter your full name", font=("Helvetica", 16))
+        self.fullname.grid(row=2, column=0, columnspan=10, pady=10)
+        
+        self.entry = ctk.CTkEntry(self, placeholder_text="full name")
+        self.entry.grid(row=3, column=0, columnspan=10, pady=8, padx=10)
+        
+        self.username = ctk.CTkLabel(self, text="Username", font=("Helvetica", 16))
+        self.username.grid(row=4, column=0, columnspan=10, pady=10)
 
 # MySQL database connection details
 db_config = {
@@ -74,6 +92,8 @@ class App(ctk.CTk):
         self.title("EMS App")    
         self.geometry("800x800")
         
+        self.frame1 = frame(self, header_name="Login Here")
+        self.frame1.grid(row=10, column=10, padx=100, pady=100)
         
         
         
