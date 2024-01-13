@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
+import customtkinter as ctk
 
 def submit_form():
     # Implement form submission logic here
@@ -11,12 +12,12 @@ def show_login():
     print("Switching to login frame")
 
 # Create the main window
-root = tk.Tk()
+root = ctk.CTk()
 root.title("Signup Window")
 root.geometry("700x700")
 
 # Left Frame with an image
-left_frame = ttk.Frame(root, width=350, height=700)
+left_frame = ttk.Frame(root, width=700, height=700)
 left_frame.grid(row=0, column=0)
 
 # Load and display an image on the left frame
