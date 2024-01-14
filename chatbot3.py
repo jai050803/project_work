@@ -3,14 +3,11 @@ from tkinter import filedialog
 from tkinter import Scrollbar
 import pandas as pd
 import spacy
-import openai
 
 class ChatApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Chat App")
-        
-        openai.api_key = "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"
 
         # Create a label for the chatbot title
         chatbot_label = tk.Label(root, text="AI Chatbot", font=("Arial", 14), bg="deep sky blue", fg="black")
@@ -70,38 +67,61 @@ class ChatApp:
             # Display user message in the chat display
             self.display_message("You: " + user_input_text)
 
-            # Generate a response using OpenAI's GPT-3
-            response = self.generate_response_openai(user_input_text)
-
+            # Generate a response using spaCy
+            response = self.generate_response(user_input_text)
+            
             # Display the bot's response in the chat display
             self.display_message(f"Bot: {response}")
 
             # Clear the user input
             self.user_input.delete(0, tk.END)
 
-    def generate_response_openai(self, input_text):
-        # Add information from the uploaded data to the input prompt
-        prompt = f"You: {input_text}\nBot: Data Info - {self.get_data_info()}\n"
-        
-        # Make a request to OpenAI's API to generate a response
-        response = openai.Completion.create(
-            engine="text-davinci-002",  # You can experiment with different engines
-            prompt=prompt,
-            temperature=0.7,
-            max_tokens=150
-        )
+    def generate_response(self, input_text):
+        # Use spaCy for basic response generation
+        doc = self.nlp(input_text)
 
-        return response['choices'][0]['text'].strip()
+        # Check if the user is asking about the data description
+        if any(token.text.lower() in ["data", "description", "describe"] for token in doc):
+            if self.uploaded_data is not None:
+                # Generate statistical information using pd.describe()
+                description = self.uploaded_data.describe()
+                return f"Here is the statistical information of the data:\n\n{description}"
+            else:
+                return "Please upload a file first."
 
-    def get_data_info(self):
-        if self.uploaded_data is not None:
-            # Provide some information about the uploaded data
-            num_rows, num_columns = self.uploaded_data.shape
-            column_names = ", ".join(self.uploaded_data.columns)
+        # Check if the user wants to clean the data
+        if any(token.text.lower() in ["clean", "remove", "null", "duplicate"] for token in doc):
+            response = self.clean_data(input_text)
+            return response
 
-            return f"The dataset contains {num_rows} rows and {num_columns} columns. Columns: {column_names}"
+        # If no specific query is detected, return a default response
+        return "I'm a simple chatbot. Ask me anything!"
+
+    def clean_data(self, input_text):
+        # Perform data cleaning operations based on user input
+        if "remove duplicate data" in input_text.lower():
+            self.uploaded_data.drop_duplicates(inplace=True)
+            self.changes.append("Removed duplicate data.")
+            return "Duplicate data removed."
+
+        elif "show me duplicate data" in input_text.lower():
+            duplicate_rows = self.uploaded_data[self.uploaded_data.duplicated()]
+            return f"Duplicate data:\n\n{duplicate_rows}"
+
+        elif "remove null values from this column" in input_text.lower():
+            # Extract column name from the input
+            column_name = input_text.split("from this column")[1].strip()
+            self.uploaded_data.dropna(subset=[column_name], inplace=True)
+            self.changes.append(f"Removed null values from column '{column_name}'.")
+            return f"Null values removed from column '{column_name}'."
+
+        elif "remove null values from the data" in input_text.lower():
+            self.uploaded_data.dropna(inplace=True)
+            self.changes.append("Removed null values from the entire dataset.")
+            return "Null values removed from the entire dataset."
+
         else:
-            return "No data has been uploaded."
+            return "I'm not sure how to clean the data based on your input."
 
     def display_message(self, message):
         # Enable the Text widget to modify its content
