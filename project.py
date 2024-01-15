@@ -2,7 +2,6 @@ from tkinter import messagebox
 import tkinter as tk
 import customtkinter as ctk
 import mysql.connector
-import customtkinter as ctk
 
 class frame(ctk.CTkFrame):
     def __init__(self, *args, header_name="Login", **kwargs):

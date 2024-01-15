@@ -63,7 +63,7 @@ email_label.grid(row=1, column=0, pady=10, sticky="w")
 email_entry.grid(row=1, column=1, pady=10, sticky="w")
 
 password_label.grid(row=2, column=0, pady=10, sticky="w")
-password_entry.grid(row=2, column=1, pady=10, sticky="w")
+password_entry.grid(row=2, column=1, pady=10, stickSy="w")
 
 confirm_password_label.grid(row=3, column=0, pady=10, sticky="w")
 confirm_password_entry.grid(row=3, column=1, pady=10, sticky="w")
